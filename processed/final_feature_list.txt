@@ -1,0 +1,10 @@
+studyhours
+diethabit_healthy
+diethabit_moderate
+diethabit_others
+diethabit_unhealthy
+sleepdur_5-6 hours
+sleepdur_7-8 hours
+sleepdur_less than 5 hours
+sleepdur_more than 8 hours
+sleepdur_others
