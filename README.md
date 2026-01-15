@@ -9,7 +9,7 @@ Engineered a resource-efficient depression screening system using Knowledge Dist
 ## 📌 Project Overview
 This project addresses the challenge of early depression screening in student populations. Traditional methods rely on subjective questionnaires (e.g., PHQ-9) or sensitive personal data. 
 
-**My Solution:** I developed a lightweight, privacy-preserving Deep Learning model that detects depression risk using **only 10 objective behavioral markers** (e.g., Sleep, Diet, Study Hours), achieving performance comparable to a model using 46 comprehensive features. 
+**Solution:** I developed a lightweight, privacy-preserving Deep Learning model that detects depression risk using **only 10 objective behavioral markers** (e.g., Sleep, Diet, Study Hours), achieving performance comparable to a model using 46 comprehensive features. 
 
 This was achieved via **Knowledge Distillation (KD)**, compressing a complex "Teacher" model into a compact "Student" model suitable for non-intrusive edge deployment.
 
