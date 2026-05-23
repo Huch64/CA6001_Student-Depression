@@ -11,7 +11,7 @@
 
 ## 📌 The Problem
 
-Student depression is usually assessed through **clinical interviews** or **self-reported questionnaires (e.g., PHQ-9)**. These are subjective, episodic, and require active participation — so at-risk students are often caught late, or not at all.
+Student depression is usually assessed through **clinical interviews** or **self-reported questionnaires (e.g., [PHQ-9](assets/patient-health-questionnaire.pdf))**. These are subjective, episodic, and require active participation — so at-risk students are often caught late, or not at all.
 
 **The question this project asks:**
 > *Can purely **objective behavioral signals** — sleep, diet, study hours — detect depression risk, even though each signal correlates only weakly with the outcome?*
@@ -38,7 +38,28 @@ A key finding: the baseline (no KD) **overfits noise** and its recall collapses 
 
 ---
 
+## 🔍 Exploratory Data Analysis & Feature Selection
+
+Which features are worth deploying? I scored every feature on **predictive impact** vs **data objectivity / collection cost** — the behavioral signals (sleep, diet, study hours) sit in the "easy-to-measure, non-sensitive" zone, while the strongest predictors (suicidal thoughts, academic pressure) are exactly the sensitive items we want to avoid collecting.
+
+![Feature attribute matrix: predictive impact vs. data objectivity](assets/06_feature_attribute_matrix.png)
+
+This frames the core tension: the **most objective behavioral features carry only a weak, dispersed signal**. The correlation analysis confirms it — behavioral features correlate weakly with depression (|r| ≈ 0.2), while the high-signal features are the sensitive ones.
+
+<table>
+<tr>
+<td width="50%"><img src="assets/09_correlation_matrix.png" alt="Correlation with depression"></td>
+<td width="50%"><img src="assets/08_feature_radar.png" alt="Healthy vs depressed feature profiles"></td>
+</tr>
+</table>
+
+The radar plot shows healthy vs depressed profiles overlap heavily on behavioral axes — there is *signal*, but it's subtle and non-linear. ([Raw-data diagnosis of all feature distributions](assets/07_raw_data_diagnosis.png) drove the cleaning and one-hot encoding decisions.) This is precisely why a model trained directly on these features underperforms — and why Knowledge Distillation is needed to recover the lost performance.
+
+---
+
 ## 🔬 How It Works — A Progressive 3-Phase Framework
+
+![End-to-end pipeline: from raw data through the 3-phase modeling framework](assets/05_pipeline_overview.png)
 
 **Phase I — Algorithmic Benchmarking & Feature Diagnosis.**
 Benchmarked classical models (Random Forest, CatBoost, LogReg, KNN, LinearSVC) on both feature sets. Behavioral-only models plateaued (F1 ≈ 0.72), while a LinearSVC on the full set hit recall ≈ 0.89 — evidence of a **latent high-dimensional decision boundary** (Cover, 1965) that linear/behavioral models can't reach. This motivated neural networks + distillation.
@@ -57,13 +78,17 @@ Best config: **T = 10, α = 0.1**. Implementation: [`src/distillation_loss.py`](
 
 ![Probability density transition](assets/02_probability_density_transition.png)
 
-The baseline (pink) spreads depressed samples across the threshold — many false negatives. After distillation, the student (green) **shifts its probability mass to mirror the Teacher (grey)**, confidently separating the at-risk class. Distillation transferred the Teacher's *decision geometry*, not just its labels — visible too in the latent-space topology ([`assets/04_latent_space_topology.png`](assets/04_latent_space_topology.png)).
+The baseline (pink) spreads depressed samples across the threshold — many false negatives. After distillation, the student (green) **shifts its probability mass to mirror the Teacher (grey)**, confidently separating the at-risk class.
+
+Looking at the **latent space** makes the transfer even clearer:
+
+![Latent-space topology: how KD reshapes the 10-feature representation](assets/04_latent_space_topology.png)
+
+A PCA projection of each model's internal representation shows the baseline (10 features) collapses into a tangled blob with no clean class separation. The distilled student instead **recovers a smooth, curved manifold that echoes the Teacher's** — even though it sees only the 10 behavioral features. Distillation transferred the Teacher's *decision geometry* (its "reasoning structure"), not just its labels.
 
 ---
 
 ## 🚀 From Model to Deployment — A Two-Phase Screening Strategy
-
-![Two-phase deployment workflow](assets/03_deployment_workflow.png)
 
 The distilled student is tuned for **high recall** (lowering the threshold to τ = 0.4 raises recall to ~0.92) so it works as a **continuous, low-cost first-pass screen** (e.g., from wearable / app data). Anything it flags is escalated to the **high-precision Teacher / clinical review**. Sensitivity where it's cheap; precision where it matters.
 
@@ -93,7 +118,7 @@ The distilled student is tuned for **high recall** (lowering the threshold to τ
 │   └── 04_Presentation.ipynb             # interactive Gradio demo
 ├── src/
 │   └── distillation_loss.py              # custom KD loss + student model builder
-├── assets/                               # exported result figures (used in this README)
+├── assets/                               # EDA + result figures (used in this README)
 ├── requirements.txt
 └── LICENSE
 ```

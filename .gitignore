@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Project data & model artifacts (do NOT commit — see README for data source)
 *.csv
 *.h5
