@@ -1,3 +1,13 @@
+# Project data & model artifacts (do NOT commit — see README for data source)
+*.csv
+*.h5
+*.keras
+*.weights.h5
+*.pkl
+*.joblib
+data/
+models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
