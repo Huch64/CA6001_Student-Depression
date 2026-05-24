@@ -96,7 +96,7 @@ The distilled student is tuned for **high recall** (lowering the threshold to τ
 
 ## 📊 Dataset
 
-- **Source:** [Student Depression Dataset](https://www.kaggle.com/datasets/adilshamim8/student-depression-dataset) (Kaggle, contributed by Adil Shamim).
+- **Source:** [Student Depression Dataset](https://www.kaggle.com/datasets/hopesb/student-depression-dataset) (Kaggle). *Originally published by Adil Shamim; that page is no longer available, so this links to a mirror of the identical 27,901-record dataset.*
 - **Size:** 27,901 records → 27,884 after outlier removal (IQR) and feature filtering.
 - **Behavioral features (Student input, 10 cols after one-hot):** Sleep Duration, Dietary Habits, Work/Study Hours.
 - **Full features (Teacher input, 46 cols after one-hot):** the above + CGPA, Academic Pressure, Study Satisfaction, Financial Stress, Family History, Suicidal Thoughts, Age, Gender, etc.
