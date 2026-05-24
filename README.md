@@ -1,22 +1,30 @@
-# Non-Intrusive Student Depression Screening via Objective Behavioral Markers 🙍
+# The Unasked 🙍
+### Non-Intrusive Student Depression Screening via Objective Behavioral Markers
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-Keras-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 > **CA6001 – Applied AI Algorithms Project · NTU CCDS (MCAAI)**
+>
+> *Detecting depression risk from the questions we never ask.*
 > A resource-efficient depression-screening pipeline that uses **Knowledge Distillation** to match a 46-feature model while reading **only 10 objective behavioral markers** — making early screening cheap, privacy-preserving, and deployable on edge devices.
+>
+> The name **"The Unasked"** carries the project's thesis: it deliberately leaves the *sensitive questions unasked* (suicidal thoughts, financial stress), and reaches the *at-risk students who are never asked* by traditional, participation-dependent screening.
 
 ---
 
 ## 📌 The Problem
 
-Student depression is usually assessed through **clinical interviews** or **self-reported questionnaires (e.g., [PHQ-9](assets/patient-health-questionnaire.pdf))**. These are subjective, episodic, and require active participation — so at-risk students are often caught late, or not at all.
+Student depression is usually assessed through **clinical interviews** or **self-reported questionnaires (e.g., [PHQ-9](assets/patient-health-questionnaire.pdf))**. These are subjective, episodic, and require active participation — so the students most at risk are often the ones who are never asked, or asked too late.
 
-**The question this project asks:**
+**The question this project refuses to ask:**
+> *"Have you had thoughts of suicide? How is your financial stress?"* — the sensitive items that carry the strongest signal, yet are exactly what we must leave **unasked**.
+
+**The question it asks instead:**
 > *Can purely **objective behavioral signals** — sleep, diet, study hours — detect depression risk, even though each signal correlates only weakly with the outcome?*
 
-The catch: behavioral features carry a **weak, dispersed signal** on their own. A model trained on them directly tops out around F1 ≈ 0.62. The full clinical feature set (including sensitive items like suicidal thoughts and financial stress) reaches F1 ≈ 0.87 — but collecting that data is exactly what we want to avoid.
+The catch: behavioral features carry a **weak, dispersed signal** on their own. A model trained on them directly tops out around F1 ≈ 0.62. The full clinical feature set (including the sensitive, unasked items like suicidal thoughts and financial stress) reaches F1 ≈ 0.87 — but collecting that data is exactly what we want to avoid.
 
 **The solution:** train a powerful **Teacher** on all 46 features, then use **Knowledge Distillation (KD)** to transfer its "reasoning" into a compact **Student** that sees only the 10 behavioral features. The Student recovers almost all of the Teacher's performance — without ever touching sensitive data.
 
@@ -126,8 +134,8 @@ The distilled student is tuned for **high recall** (lowering the threshold to τ
 ## ⚙️ Reproduce
 
 ```bash
-git clone https://github.com/<your-username>/CA6001_Student-Depression.git
-cd CA6001_Student-Depression
+git clone https://github.com/Huch64/CA6001_theUnasked.git
+cd CA6001_theUnasked
 pip install -r requirements.txt
 ```
 
